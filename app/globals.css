@@ -1,0 +1,271 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Theme Variables ──────────────────────────────────── */
+:root {
+  --bg-primary: #050505;
+  --bg-secondary: #0F172A;
+  --text-primary: #FFFFFF;
+  --text-secondary: #D1D5DB;
+  --text-muted: #6B7280;
+  /* Frosted-glass cards — visible over the 3-D animation  */
+  --glass-bg:            rgba(255, 255, 255, 0.07);
+  --glass-border:        rgba(255, 255, 255, 0.13);
+  --glass-strong-bg:     rgba(255, 255, 255, 0.11);
+  --glass-strong-border: rgba(255, 255, 255, 0.18);
+  --card-border:         rgba(255, 255, 255, 0.10);
+  --nav-bg:              rgba(5,   5,   5,   0.55);
+  --scrollbar-track:     #050505;
+  --selection-bg:        rgba(59, 130, 246, 0.3);
+}
+
+[data-theme="light"] {
+  --bg-primary: #F8FAFC;
+  --bg-secondary: #EFF6FF;
+  --text-primary: #0F172A;
+  --text-secondary: #4B5563;
+  --text-muted: #9CA3AF;
+  --glass-bg:            rgba(255, 255, 255, 0.55);
+  --glass-border:        rgba(15,  23,  42,  0.12);
+  --glass-strong-bg:     rgba(255, 255, 255, 0.72);
+  --glass-strong-border: rgba(15,  23,  42,  0.16);
+  --card-border:         rgba(15,  23,  42,  0.08);
+  --nav-bg:              rgba(248, 250, 252, 0.80);
+  --scrollbar-track:     #F8FAFC;
+  --selection-bg:        rgba(59, 130, 246, 0.2);
+}
+
+/* ─── Reset ────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; padding: 0; margin: 0; }
+
+/* NOTE: no scroll-behavior: smooth here — Lenis handles smoothing */
+html { height: 100%; }
+
+body {
+  /* Keep a base colour for areas not covered by Three.js */
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Inter', system-ui, sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.4s ease, color 0.4s ease;
+  min-height: 100%;
+  /* Ensure sections sit above the fixed canvas */
+  position: relative;
+  z-index: 1;
+}
+
+::selection {
+  background: var(--selection-bg);
+  color: var(--text-primary);
+}
+
+/* ─── Scrollbar ───────────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--scrollbar-track); }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #3B82F6, #8B5CF6);
+  border-radius: 3px;
+}
+
+/* ─── Glass Utilities ─────────────────────────────────── */
+
+/* Nav / modals / overlays — still need a solid blur so    */
+/* text behind doesn't bleed through the navigation bar.  */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(14px) saturate(150%);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.08),
+    0 4px 20px rgba(0,0,0,0.15);
+  transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.3s ease;
+}
+
+.glass-strong {
+  background: var(--glass-strong-bg);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid var(--glass-strong-border);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.12),
+    0 8px 28px rgba(0,0,0,0.20);
+  transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.3s ease;
+}
+
+/* ── Content cards sitting over the 3-D animation ──────── */
+/* Low opacity + minimal blur so the particles / wireframes  */
+/* are clearly visible through the card surface.            */
+.glass-card {
+  background: rgba(8, 10, 18, 0.28);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.06),
+    0 2px 16px rgba(0,0,0,0.25);
+  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-card:hover {
+  background: rgba(8, 10, 18, 0.38);
+  border-color: rgba(255,255,255,0.16);
+}
+
+[data-theme="light"] .glass-card {
+  background: rgba(255, 255, 255, 0.38);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: 1px solid rgba(15, 23, 42, 0.12);
+}
+
+[data-theme="light"] .glass-card:hover {
+  background: rgba(255, 255, 255, 0.52);
+}
+
+/* ─── Text Gradient ───────────────────────────────────── */
+.text-gradient {
+  background: linear-gradient(135deg, #3B82F6, #06B6D4, #8B5CF6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ─── Section background utilities ───────────────────── */
+/* Kept intentionally light so the global Three.js        */
+/* animation is visible through every section.            */
+
+/* Very subtle dark wash — just enough to improve text    */
+/* contrast without blocking the animated background.     */
+.sec-bg {
+  background: linear-gradient(
+    to bottom,
+    rgba(5, 5, 5, 0.12) 0%,
+    rgba(15, 23, 42, 0.08) 50%,
+    rgba(5, 5, 5, 0.12) 100%
+  );
+  transition: background 0.4s ease;
+}
+
+.sec-bg-soft {
+  background: linear-gradient(
+    to bottom,
+    rgba(5, 5, 5, 0.08) 0%,
+    rgba(15, 23, 42, 0.05) 100%
+  );
+  transition: background 0.4s ease;
+}
+
+/* Footer stays more opaque for readability */
+.sec-bg-footer {
+  background: linear-gradient(
+    to top,
+    rgba(5, 5, 5, 0.80) 0%,
+    rgba(5, 5, 5, 0.40) 100%
+  );
+  transition: background 0.4s ease;
+}
+
+/* Light mode: subtle white wash, still lets animation through */
+[data-theme="light"] .sec-bg {
+  background: linear-gradient(
+    to bottom,
+    rgba(248, 250, 252, 0.45) 0%,
+    rgba(239, 246, 255, 0.28) 50%,
+    rgba(248, 250, 252, 0.45) 100%
+  );
+}
+
+[data-theme="light"] .sec-bg-soft {
+  background: linear-gradient(
+    to bottom,
+    rgba(248, 250, 252, 0.35) 0%,
+    rgba(239, 246, 255, 0.20) 100%
+  );
+}
+
+[data-theme="light"] .sec-bg-footer {
+  background: linear-gradient(
+    to top,
+    rgba(248, 250, 252, 0.92) 0%,
+    rgba(248, 250, 252, 0.65) 100%
+  );
+}
+
+/* ─── Grid background ─────────────────────────────────── */
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(59, 130, 246, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59, 130, 246, 0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+[data-theme="light"] .grid-bg {
+  background-image:
+    linear-gradient(rgba(59, 130, 246, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59, 130, 246, 0.07) 1px, transparent 1px);
+}
+
+/* ─── Light mode text overrides ───────────────────────── */
+[data-theme="light"] .text-white            { color: var(--text-primary) !important; }
+[data-theme="light"] .text-gray-400         { color: var(--text-secondary) !important; }
+[data-theme="light"] .text-gray-500         { color: var(--text-muted) !important; }
+[data-theme="light"] .text-gray-300         { color: var(--text-secondary) !important; }
+
+/* Borders in light mode */
+[data-theme="light"] .border-white\/5       { border-color: rgba(15,23,42,0.07) !important; }
+[data-theme="light"] .border-white\/10      { border-color: rgba(15,23,42,0.10) !important; }
+[data-theme="light"] .border-white\/20      { border-color: rgba(15,23,42,0.15) !important; }
+
+/* Section dark backgrounds → light in light mode */
+[data-theme="light"] .bg-\[#050505\]        { background-color: var(--bg-primary) !important; }
+[data-theme="light"] .from-\[#050505\]      { --tw-gradient-from: var(--bg-primary) !important; }
+[data-theme="light"] .to-\[#050505\]        { --tw-gradient-to: var(--bg-primary) !important; }
+[data-theme="light"] .via-\[#0F172A\]       { --tw-gradient-via: var(--bg-secondary) !important; }
+
+/* Background overrides */
+[data-theme="light"] .bg-white\/5           { background-color: rgba(15,23,42,0.04) !important; }
+[data-theme="light"] .bg-white\/10          { background-color: rgba(15,23,42,0.07) !important; }
+[data-theme="light"] .hover\:bg-white\/10:hover { background-color: rgba(15,23,42,0.07) !important; }
+
+/* Mono text */
+[data-theme="light"] .text-gray-500.font-mono { color: #6B7280 !important; }
+
+/* ─── Heading legibility over animated background ─────── */
+/* Subtle text shadow gives headings depth and contrast    */
+/* without needing a solid section background.             */
+h1, h2, h3 {
+  text-shadow: 0 2px 20px rgba(0,0,0,0.5);
+}
+
+p, span, label, li {
+  text-shadow: 0 1px 8px rgba(0,0,0,0.35);
+}
+
+[data-theme="light"] h1,
+[data-theme="light"] h2,
+[data-theme="light"] h3,
+[data-theme="light"] p,
+[data-theme="light"] span,
+[data-theme="light"] label,
+[data-theme="light"] li {
+  text-shadow: 0 1px 6px rgba(255,255,255,0.6);
+}
+
+/* ─── Animations ──────────────────────────────────────── */
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33%  { transform: translateY(-15px) rotate(1deg); }
+  66%  { transform: translateY(-8px) rotate(-1deg); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50%       { opacity: 1;   transform: scale(1.05); }
+}
+
+.animate-float       { animation: float 6s ease-in-out infinite; }
+.animate-pulse-glow  { animation: pulse-glow 3s ease-in-out infinite; }
